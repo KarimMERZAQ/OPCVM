@@ -157,6 +157,12 @@ def fill_data_into_performance_csv():
     #os.remove('TPC.csv')
     return(f"Data saved: Latest data date is: {dt}.")
 
+def MAJ_DATA():
+    st.write(fill_data_into_performance_csv())
+
+if st.button('Mettre les données à jour'):
+    MAJ_DATA()
+
 def filter_comparable_fundsFirst(df, benchmark, periodicity, classification):
    
     comparable_funds = df.copy()
