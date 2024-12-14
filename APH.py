@@ -158,6 +158,7 @@ def fill_data_into_performance_csv():
     return(f"Data saved: Latest data date is: {dt}.")
 
 def MAJ_DATA():
+    st.write("Mise à jour en cours")
     st.write(fill_data_into_performance_csv())
 
 if st.button('Mettre les données à jour'):
