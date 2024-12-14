@@ -2,7 +2,7 @@ name: Update Data Daily
 
 on:
   schedule:
-    - cron: '0 6 * * *'  # Exécution quotidienne à 6h00 UTC
+    - cron: '25 13 * * *'  # Exécution quotidienne à 6h00 UTC
 
 jobs:
   update-data:
