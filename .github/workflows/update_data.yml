@@ -2,7 +2,7 @@ name: Update Data Daily
 
 on:
   schedule:
-    - cron: '45 14 * * *'  # Exécute tous les jours à 01:00 UTC
+    - cron: '43 14 * * *'  # Exécute tous les jours à 01:00 UTC
   workflow_dispatch: # Permet l'exécution manuelle
 
 jobs:
