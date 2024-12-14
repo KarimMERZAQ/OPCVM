@@ -2,7 +2,7 @@ name: Update Data Daily
 
 on:
   schedule:
-    - cron: '43 14 * * *'  # Exécute tous les jours à 01:00 UTC
+    - cron: '58 15 * * *'  # Exécute tous les jours à 01:00 UTC
   workflow_dispatch: # Permet l'exécution manuelle
 
 jobs:
@@ -21,7 +21,18 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt  # Liste des dépendances si disponible
+          pip install -r requirements.txt
 
       - name: Run update_data script
         run: python update_data.py
+
+      - name: Push changes
+        env:
+          GH_PAT: ${{ secrets.GH_PAT }}
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git remote set-url origin https://x-access-token:${GH_PAT}@github.com/KarimMERZAQ/OPCVM.git
+          git add DataF/df_performance_cleaned.csv DataF/df_info_fonds_normalized.csv
+          git commit -m "Daily data update [skip ci]" || echo "No changes to commit"
+          git push
