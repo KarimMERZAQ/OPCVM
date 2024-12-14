@@ -1,4 +1,4 @@
-name: Update Streamlit Data Daily
+name: Update Data Daily
 
 on:
   schedule:
@@ -7,6 +7,7 @@ on:
 jobs:
   update-data:
     runs-on: ubuntu-latest
+
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
@@ -17,11 +18,10 @@ jobs:
         python-version: '3.9'
 
     - name: Install dependencies
-      run: |
-        pip install -r requirements.txt
+      run: pip install -r requirements.txt
 
-    - name: Run update script
-      run: python APH.py
+    - name: Run data update script
+      run: python update_data.py
 
     - name: Commit and push updated data
       run: |
