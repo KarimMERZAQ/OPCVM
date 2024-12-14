@@ -34,6 +34,10 @@ def normalize_benchmark(dataframe):
     dataframe['Info'] = dataframe['Info'].str.strip().str.upper()
     return dataframe
 
+
+
+
+
 def download_and_process_file(date_to_process):
     if isinstance(date_to_process, str):
         date_to_process = datetime.strptime(date_to_process, "%d-%m-%Y").date()
@@ -71,28 +75,37 @@ def download_and_process_file(date_to_process):
         df = pd.read_excel(excel_file, skiprows=1)
         os.remove(excel_file)
         
+        # Check for empty or malformed data
+        if df.empty:
+            print("Error: Downloaded file is empty.")
+            return None
+        
+        # Save as CSV
         csv_file = 'TPC.csv'
         df.to_csv(csv_file, index=False)
-        if 'Hebdomadaires' in generated_url:
-            df_info_fonds_normalized.to_csv('DataF/df_info_fonds_normalized.csv', index=False)
         
         df_info_fonds = pd.read_csv(csv_file)
+        print("Downloaded DataFrame columns:", df_info_fonds.columns)
+        
         df_info_fonds.rename(columns={'Dénomination OPCVM': 'Info'}, inplace=True)
         df_info_fonds.rename(columns={'Périodicité VL': 'Periodicite VL'}, inplace=True)
-        
-        print("Columns in the downloaded file:", df_info_fonds.columns)
+
+        os.makedirs('DataF', exist_ok=True)  # Ensure directory exists
+
+        # Normalize the data
         df_info_fonds_normalized = normalize_benchmark(df_info_fonds)
         
         if df_info_fonds_normalized is None:
-            print("Normalization failed due to missing 'Info' column.")
+            print("Normalization failed.")
             return None
         
-        
-        print(f"Data processed for {formatted_date}.")
+        df_info_fonds_normalized.to_csv('DataF/df_info_fonds_normalized.csv', index=False)
+        print(f"Data processed successfully for {formatted_date}.")
         return df_info_fonds_normalized
+    else:
+        print(f"Error downloading file for {formatted_date}. HTTP Status Code: {response.status_code}")
+        return None
 
-    print(f"No file found for {formatted_date}.")
-    return None
 
 def fill_data_into_performance_csv():
     df2 = pd.read_csv('DataF/df_performance_cleaned.csv')
